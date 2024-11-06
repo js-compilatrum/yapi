@@ -5,6 +5,7 @@ import requests
 import lxml
 from bs4 import BeautifulSoup as soup
 
+""" Simple Flask application """
 app = Flask(__name__)
 
 
