@@ -1,6 +1,8 @@
 from datetime import datetime
 
-from flask import Flask
+from flask import Flask, render_template
+from flask import jsonify
+from flask import request
 import requests
 import lxml
 from bs4 import BeautifulSoup as soup
@@ -10,6 +12,7 @@ app = Flask(__name__)
 
 happy_smiley_b64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAnXAAAJ1wGxbhe3AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAgZJREFUOI2lkj9oU2EUxX/3S4JNWqsJBaGIBWnpkkShk7o1RXAICE0KLmIL0kUQ6ebs4CRFXYpRiw5iXjOJOPhncSgOYkgr2KaiQnGQQkL/5KVp37sOyYtpiFPvdi7nnu/cez44ZEmnZv9IMlTZ6xozyiCIuqLfQ4Hqu9+fX1Xaub52wUg0NbPnBHLAKQVboRdI7jv+u6ET0X37z9dP/3Mg4djEc1QHHL87tZnPFVuJvWfHh3yueYrqj9LSwlVADwhEoqkZRS6XqttjrL3Z7bjw4KUj4WDPBxW1yoWF2aZA/0gyZO92/XL87vnNfK6YntMYgDUtSwCtuC+eHnaUj909DKwvWrYBsPeCCRW+eLbVkFRD0nu4FW8UrBWBws4WowB+AHEZBvLeQI+fe63O27ErkjfoMPDaNFqqRoxHqNkE5yel6uH5SanWbIJNBVUBUQBTt2hWUY0DpDMaqQVYST/SUY+fymiiFuBbOqORxtAZVV09eMRa10/H517YzOeKqcd6EeUhyjHqeZUN3LCuy9v2I/6LMTZxS0XHS5XthBfjlTntA3gxLRsHYlR5WV7O3m86aJSEY6lnIKd9wtRGwVppPVzj5SeorJWWs9do/0ieyPF46qao3BYouGihvrPEFeKqcqe8nH3gDXcSAODkuXRwZ0sTImaofnS32H1U3q8vWnYn/qHqL8V35T417C5JAAAAAElFTkSuQmCC"
 smiley_img = f'<img src="{happy_smiley_b64}">'
+
 def parse_lord_words(html_source: str) -> dict:
     if not isinstance(html_source, str):
         return {'error': 'source is not a string'}
@@ -59,6 +62,15 @@ def show_bible_quote():
     if html.text and html.text != "":
         return parse_lord_words(html.text)
     return {'error': 'No source available'}
+
+
+@app.route('/ip')
+def show_ip():
+    """Get client IP adress
+    Another way: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For
+    """
+
+    return jsonify({'ip': request.remote_addr}), 200
 
 
 if __name__ == '__main__':
