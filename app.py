@@ -71,7 +71,7 @@ def show_ip():
     Another way: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For
     """
 
-    return jsonify({'ip': request.remote_addr}), 200
+    return jsonify({'ip': request.access_route[-1]}), 200
 
 
 @app.route('/board')
